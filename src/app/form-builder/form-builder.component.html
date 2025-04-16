@@ -1,0 +1,113 @@
+<section fxLayoutAlign="center center">
+  <div class="container bg-light p-4 rounded shadow-sm">
+    <p class="fs-2 fw-bold lh-base p-4">Dynamic Form Builder</p>
+  
+   <div class="p-4 my-4 bg-white rounded shadow-sm">
+    <button mat-raised-button color="primary" (click)="togglePreview()">
+      {{ previewMode ? '⬅ Back to Builder' : '➡ Preview Form' }}
+    </button>
+  
+    <!-- Builder Mode -->
+    <div *ngIf="!previewMode">
+      <div class="mt-3 mb-4">
+        <mat-form-field appearance="fill" class="w-50">
+          <mat-label>Field Type</mat-label>
+          <mat-select [(ngModel)]="fieldType">
+            <mat-option value="text">Text</mat-option>
+            <mat-option value="textarea">Textarea</mat-option>
+            <mat-option value="dropdown">Dropdown</mat-option>
+            <mat-option value="checkbox">Checkbox</mat-option>
+            <mat-option value="radio">Radio</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-raised-button class="ms-4 w-auto" color="accent" (click)="addField()">Add Field</button>
+      </div>
+  
+      <div *ngFor="let field of fieldList; let i = index" class="border p-3 mb-3 rounded">
+
+        <!-- Label -->
+        <mat-form-field class="w-100">
+          <mat-label>Label</mat-label>
+          <input matInput [(ngModel)]="field.label" required />
+          <mat-error *ngIf="field.label === ''">Label is required</mat-error>
+        </mat-form-field>
+      
+        <!-- Placeholder (not for checkbox/radio) -->
+        <mat-form-field class="w-100" *ngIf="field.type !== 'checkbox' && field.type !== 'radio'">
+          <mat-label>Placeholder</mat-label>
+          <input matInput [(ngModel)]="field.placeholder" required />
+          <mat-error *ngIf="field.placeholder === ''">Placeholder is required</mat-error>
+        </mat-form-field>
+      
+        <!-- Required Checkbox -->
+        <mat-checkbox [(ngModel)]="field.required">Required</mat-checkbox>
+      
+        <!-- Min Length & Max Length (for text/textarea) -->
+        <mat-form-field class="w-100" *ngIf="field.type === 'text' || field.type === 'textarea'">
+          <mat-label>Min Length</mat-label>
+          <input matInput type="number" [(ngModel)]="field.minlength" />
+          <mat-error *ngIf="field.minlength < 0">Min Length must be 0 or more</mat-error>
+        </mat-form-field>
+      
+        <mat-form-field class="w-100" *ngIf="field.type === 'text' || field.type === 'textarea'">
+          <mat-label>Max Length</mat-label>
+          <input matInput type="number" [(ngModel)]="field.maxlength" />
+          <mat-error *ngIf="field.maxlength < 0">Max Length must be 0 or more</mat-error>
+        </mat-form-field>
+      
+        <!-- Options (for dropdown/radio) -->
+        <mat-form-field class="w-100" *ngIf="field.type === 'dropdown' || field.type === 'radio'">
+          <mat-label>Options (comma separated)</mat-label>
+          <input matInput [(ngModel)]="field.optionsString" (ngModelChange)="field.options = field.optionsString.split(',')" />
+          <mat-error *ngIf="!field.optionsString || field.optionsString.trim() === ''">Options are required</mat-error>
+        </mat-form-field>
+      
+        <!-- Remove Button -->
+        <button mat-raised-button color="warn" (click)="removeField(i)">Remove</button>
+      </div>
+      
+    </div>
+  
+    <!-- Preview Mode -->
+    <form *ngIf="previewMode" [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div *ngFor="let field of fieldList" class="my-4 border p-3 rounded">
+        <ng-container [ngSwitch]="field.type">
+          <mat-form-field class="w-100" *ngSwitchCase="'text'">
+            <mat-label>{{ field.label }}</mat-label>
+            <input matInput [formControlName]="field.name" [placeholder]="field.placeholder" />
+          </mat-form-field>
+  
+          <mat-form-field class="w-100" *ngSwitchCase="'textarea'">
+            <mat-label>{{ field.label }}</mat-label>
+            <textarea matInput [formControlName]="field.name" [placeholder]="field.placeholder"></textarea>
+          </mat-form-field>
+  
+          <mat-form-field class="w-100" *ngSwitchCase="'dropdown'">
+            <mat-label>{{ field.label }}</mat-label>
+            <mat-select [formControlName]="field.name">
+              <mat-option *ngFor="let option of field.options" [value]="option">{{ option }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+  
+          <div *ngSwitchCase="'checkbox'">
+            <mat-checkbox [formControlName]="field.name">{{ field.label }}</mat-checkbox>
+          </div>
+  
+          <div *ngSwitchCase="'radio'">
+            <label>{{ field.label }}</label>
+            <mat-radio-group [formControlName]="field.name">
+              <mat-radio-button *ngFor="let option of field.options" [value]="option">{{ option }}</mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </ng-container>
+  
+        <div *ngIf="form.get(field.name)?.invalid && form.get(field.name)?.touched" class="text-danger">
+          {{ field.label }} is required or invalid.
+        </div>
+      </div>
+  
+      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Submit</button>
+    </form>
+   </div>
+  </div>
+</section>

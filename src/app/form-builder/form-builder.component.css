@@ -1,0 +1,47 @@
+/* form-builder.component.css */
+
+.container {
+    max-width: 800px;
+    margin: auto;
+  }
+  
+  .custom-red-button {
+    background-color: rgb(232, 29, 29);
+    color: white;
+  }
+  .custom-red-button:hover {
+    background-color: rgb(86, 58, 58);
+    color: white;
+  }
+  
+
+.container {
+    padding: 2rem;
+    background-color: #fafafa;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  
+  .field-box {
+    border: 1px solid #ccc;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 6px;
+    background-color: #fff;
+  }
+  
+  button.remove-button {
+    background-color: #e53935;
+    color: #fff;
+    margin-top: 10px;
+  }
+  
+  button.remove-button:hover {
+    background-color: #c62828;
+  }
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
