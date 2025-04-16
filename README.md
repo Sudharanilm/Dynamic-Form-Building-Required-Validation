@@ -15,7 +15,7 @@ An Angular application using Angular Material and Bootstrap that allows users to
 
 ## 📦 Installation
 1. **Clone the repository**
-   git clone https://github.com/Sudharanilm/Dynamic-Form-Builder.git
+   git clone https://github.com/Sudharanilm/Dynamic-Form-Building-Required-Validation.git
    cd dynamic-form-builder
 
 2. **Install dependencies**
